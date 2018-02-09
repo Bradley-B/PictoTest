@@ -3,6 +3,7 @@ import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.Socket;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -41,11 +42,30 @@ public class Launcher extends JFrame {
 		new ConnectionFrame();
 	}
 	
+	/**
+	 * Scan for servers to connect to on a specified port. Beware this is a blocking call, and the thread will wait until it is completed.
+	 * @param port the port to try and connect to
+	 * @return an array of the servers found.
+	 */
+	public String[] scan(int port) {
+		NetworkHelper nHelper = new NetworkHelper();
+		Socket[] servers = nHelper.findServers(4450);
+		String[] serversStr = new String[servers.length];
+		for(int i=0;i<servers.length;i++) {
+			Socket socket = servers[i];
+			String addr = socket.getRemoteSocketAddress().toString();
+			serversStr[i] = addr.substring(1).substring(0, addr.indexOf(":")-1);
+		}
+		return serversStr;
+	}
+	
 	private class Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource()==scanBtn) {
-				//scan for rooms (servers) and display connection buttons
+				scan(4450);
+				
+				//launch();
 			}
 		}
 	}
