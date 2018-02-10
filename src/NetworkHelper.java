@@ -12,25 +12,23 @@ import java.util.concurrent.Future;
 import java.util.regex.Pattern;
 
 public class NetworkHelper {
-
-	public static final Object LOCK = new Object();
 	
 	public Socket[] findServers(int port) {
-		ExecutorService threadPool = Executors.newFixedThreadPool(32);
+		ExecutorService threadPool = Executors.newCachedThreadPool();
 		ArrayList<Future> tasks = new ArrayList<>();
 		ArrayList<NetworkHelperConnectThread> threads = new ArrayList<>();
 		
 		for(String ip : getActiveIPv4Addresses()) {
 			String subnet = ip.substring(0, ip.lastIndexOf(".")+1);
 			for(int i=0;i<255;i++) {
-				NetworkHelperConnectThread networkHelperConnectThread = new NetworkHelperConnectThread(this, subnet+i, port, 250);
+				NetworkHelperConnectThread networkHelperConnectThread = new NetworkHelperConnectThread(this, subnet+i, port, 4000);
 				tasks.add(threadPool.submit(networkHelperConnectThread));
 				threads.add(networkHelperConnectThread);
 			}
 		}
 
 		while(!tasks.get(tasks.size()-1).isDone()) { //wait until all the possible server locations have been checked
-			try {Thread.sleep(500);} catch (InterruptedException e) {}
+			try {Thread.sleep(6000);} catch (InterruptedException e) {}
 		}
 		
 		ArrayList<Socket> connectedSockets = new ArrayList<>();

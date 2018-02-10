@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 
@@ -18,6 +19,7 @@ public class NetworkHelperConnectThread implements Runnable {
 		Socket socket = new Socket();
 		try {
 			socket.connect(new InetSocketAddress(ip, port), timeoutMs);
+			try{socket.close();} catch (IOException e) {}
 			return socket;
 		} catch (Exception e) {
 			return null;
@@ -27,7 +29,7 @@ public class NetworkHelperConnectThread implements Runnable {
 	@Override
 	public void run() {
 		socket = tryConnection(ip, port, timeoutMs);
-		System.out.println("I just scanned "+ip);
+		//System.out.println("I just scanned "+ip);
 	}
 
 	public Socket getSocket() {
