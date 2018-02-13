@@ -11,13 +11,16 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 public class Launcher extends JFrame {
 	
 	private static final long serialVersionUID = 8111960529946411805L;
 	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 	JButton scanBtn = new JButton("Search for available rooms");
+	JButton serverBtn = new JButton("Start a new room");
 	JLabel roomTextDisplay = new JLabel("");
+	JPanel connectBtnPanel = new JPanel();
 	
 	public static void main(String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -33,30 +36,29 @@ public class Launcher extends JFrame {
 		add(Box.createRigidArea(new Dimension(0, 10)));
 		add(scanBtn);
 		add(Box.createRigidArea(new Dimension(0, 5)));
+		add(serverBtn);
+		add(Box.createRigidArea(new Dimension(0, 5)));
 		add(roomTextDisplay);
 		add(Box.createRigidArea(new Dimension(0, 20)));
+		add(connectBtnPanel);
 		
 		scanBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+		serverBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		roomTextDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
 		
 		Listener listener = new Listener();
 		scanBtn.addActionListener(listener);
+		serverBtn.addActionListener(listener);
 		
 		setVisible(true);
 	}
 	
 	public void launch(String serverIP) {
-		reset();
-		//setVisible(false);
 		new ClientFrame();
-		new ConnectionFrame();
-	}
-	
-	public void reset() {
+		//new ConnectionFrame(serverIP.equals("localhost"));
 		dispose();
-		new Launcher();
 	}
-	
+		
 	/**
 	 * Scan for servers to connect to on a specified port. Beware this is a blocking call, and the thread will wait until it is completed.
 	 * @param port the port to try and connect to
@@ -79,15 +81,19 @@ public class Launcher extends JFrame {
 	 * It's scan() and createConnectButtons(), but it's asynchronous. You're welcome.
 	 * @param port
 	 */
-	public void asyncRoomUpdate(int port) {
+	public void asyncUpdate(int port) {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
+				connectBtnPanel.removeAll();
+				redraw();
 				roomTextDisplay.setText("Scanning... this will take several seconds.");
 				scanBtn.setEnabled(false);
+				serverBtn.setEnabled(false);
 				String[] servers = scan(4450);
 				createConnectButtons(servers);
 				scanBtn.setEnabled(true);
+				serverBtn.setEnabled(true);
 				roomTextDisplay.setText("found "+servers.length+" available rooms(s)");
 			}
 		});
@@ -104,18 +110,24 @@ public class Launcher extends JFrame {
 				}
 			});
 			connectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-			add(connectBtn);
-			revalidate();
-			repaint();
+			connectBtnPanel.add(connectBtn);
+			redraw();
 		}
+	}
+	
+	public void redraw() {
+		revalidate();
+		repaint();
 	}
 	
 	private class Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource()==scanBtn) {
-				//TODO if scanBtn is hit we need to remove all the connectBtns currently in the room. No free lunches!
-				asyncRoomUpdate(4450);
+				asyncUpdate(4450);
+			}
+			if(e.getSource()==serverBtn) {
+				launch("localhost");
 			}
 		}
 	}
