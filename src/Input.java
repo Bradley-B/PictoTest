@@ -1,22 +1,27 @@
 import java.awt.event.MouseMotionListener;
 import java.util.Random;
+import java.awt.Button;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Mouse implements MouseListener, MouseMotionListener {
+public class Input implements MouseListener, MouseMotionListener, KeyListener {
 
-	ClientFrame client;
-	Random random = new Random();
+	private ClientFrame client;
 	
-	public Mouse(ClientFrame client) {
+	public Input(ClientFrame client) {
 		this.client = client;
 	}
 	
-	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		mouseClicked(e);
+		if(e.getModifiers()==16) {
+			client.drawLeftMouse(e);
+		} else if(e.getModifiers()==4) {
+			client.drawRightMouse(e);
+		}
 	}
 
 	@Override
@@ -27,7 +32,11 @@ public class Mouse implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		client.drawSomething(e);
+		if(e.getButton()==MouseEvent.BUTTON1) {
+			client.drawLeftMouse(e);
+		} else if(e.getButton()==MouseEvent.BUTTON3) {
+			client.drawRightMouse(e);
+		}
 	}
 
 	@Override
@@ -52,6 +61,26 @@ public class Mouse implements MouseListener, MouseMotionListener {
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		client.drawText(""+e.getKeyChar());	
 	}
 
 }
