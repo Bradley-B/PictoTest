@@ -23,7 +23,6 @@ public class Connection {
 	private ClientFrame clientFrame = null;
 	private List<ConnectionInputListener> clientConnections = Collections.synchronizedList(new ArrayList<ConnectionInputListener>(0));
 	private ConnectionInputListener serverConnection = new ConnectionInputListener(new Socket());
-	private ObjectOutputStream serverConnectionOutputStream = null;
 	boolean isServer;
 
 	private Connection(ConnectionFrame connectionDisplay, ClientFrame client, String serverIP) {
@@ -69,7 +68,6 @@ public class Connection {
 				serverConnection.getConnection().connect(new InetSocketAddress(serverIP, 4451), 10000);
 				serverConnection.setDaemon(true);
 				serverConnection.start();
-				serverConnectionOutputStream = new ObjectOutputStream(serverConnection.getConnection().getOutputStream());
 			} catch (IOException e) {e.printStackTrace();}
 		}
 	}
@@ -83,8 +81,8 @@ public class Connection {
 		try {
 			if(!isServer) {
 				ImageIcon sendableImage = new ImageIcon(image);
-				serverConnectionOutputStream.writeObject(sendableImage);
-				serverConnectionOutputStream.flush();
+				serverConnection.getObjectOutputStream().writeObject(sendableImage);
+				serverConnection.getObjectOutputStream().flush();
 			} else { //already here, don't need to deliver. broadcast.
 				broadcastImage(image);
 			}
@@ -98,7 +96,7 @@ public class Connection {
 			if(isServer) {
 				synchronized (clientConnections) {
 					for(ConnectionInputListener connection : clientConnections) { //will be empty if not a server
-						ObjectOutputStream out = connection.getOutputStream();
+						ObjectOutputStream out = connection.getObjectOutputStream();
 						out.writeObject(sendableImage);
 						out.flush();
 					}

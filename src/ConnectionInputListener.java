@@ -14,13 +14,9 @@ public class ConnectionInputListener extends Thread {
 	
 	public ConnectionInputListener(Socket connection) {
 		this.connection = connection;
-		try {
-			this.inputStream = new ObjectInputStream(connection.getInputStream());
-			this.outputStream = new ObjectOutputStream(connection.getOutputStream());
-		} catch (IOException e) {e.printStackTrace();}
 	}
 	
-	public ObjectOutputStream getOutputStream() {
+	public ObjectOutputStream getObjectOutputStream() {
 		return outputStream;
 	}
 	
@@ -42,6 +38,11 @@ public class ConnectionInputListener extends Thread {
 	
 	@Override
 	public void run() {
+		try {
+			this.inputStream = new ObjectInputStream(connection.getInputStream());
+			this.outputStream = new ObjectOutputStream(connection.getOutputStream());
+		} catch (IOException e) {e.printStackTrace();}
+		
 		try {
 			while(!Thread.interrupted() && !connection.isClosed()) {
 				Object object = inputStream.readObject();
