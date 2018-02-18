@@ -21,14 +21,14 @@ public class ClientFrame extends JFrame {
 	private int width = 600, height = 400;
 	private Color penColor = Color.BLACK;
 	private JPanel toolPanel = new JPanel();
-	private DrawingArea drawPanel;
+	private DrawingPanel drawPanel;
 	private Tool selectedTool = Tool.RAINBOW_PEN;
 	private Clicked listener = new Clicked();
 	private ToolButton rainbowPenBtn = new ToolButton(new ImageIcon("rainbowPen.png")), 
 			customPenBtn = new ToolButton(new ImageIcon("blackPen.png")), 
 			textBtn = new ToolButton(new ImageIcon("text.png")), 
 			cameraBtn = new ToolButton(new ImageIcon("camera.png"));
-	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, RED_PEN, CAMERA;}
+	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, CAMERA;}
 	private Map<ToolButton, Tool> buttonMap = new LinkedHashMap<ToolButton, Tool>();
 
 	public ClientFrame() {	
@@ -53,14 +53,12 @@ public class ClientFrame extends JFrame {
 		}
 		add(toolPanel, BorderLayout.EAST);
 
-		drawPanel = new DrawingArea(width-toolPanel.getWidth(), height);
-		drawPanel.setBackground(Color.WHITE);
+		drawPanel = new DrawingPanel(width-toolPanel.getWidth(), height);
 		drawPanel.addMouseListener(input);
 		drawPanel.addMouseMotionListener(input);
 		drawPanel.addKeyListener(input);
 		add(drawPanel, BorderLayout.CENTER);
 
-		drawPanel.clearImage();
 		drawPanel.requestFocus();
 	}
 
@@ -88,7 +86,7 @@ public class ClientFrame extends JFrame {
 		drawPanel.erasePoint(e.getX(), e.getY());
 	}
 
-	public DrawingArea getDrawPanel() {
+	public DrawingPanel getDrawPanel() {
 		return drawPanel;
 	}
 
@@ -114,7 +112,7 @@ public class ClientFrame extends JFrame {
 		public void actionPerformed(ActionEvent e) {			
 			setSelectedTool(buttonMap.get(e.getSource()));
 			if(selectedTool==Tool.CUSTOM_PEN) {
-				penColor = JColorChooser.showDialog(null, "Pick a pen color", penColor);
+				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
 			}	
 			drawPanel.requestFocus();	
 		}

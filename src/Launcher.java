@@ -54,8 +54,9 @@ public class Launcher extends JFrame {
 	}
 	
 	public void launch(String serverIP) {
-		new ClientFrame();
-		//new ConnectionFrame(serverIP.equals("localhost"));
+		ClientFrame clientFrame = new ClientFrame();
+		ConnectionFrame connectionFrame = new ConnectionFrame();
+		Connection.createInstance(connectionFrame, clientFrame, serverIP.equals("localhost"));
 		dispose();
 	}
 		
@@ -66,7 +67,7 @@ public class Launcher extends JFrame {
 	 */
 	public String[] scan(int port) {
 		NetworkHelper nHelper = new NetworkHelper();
-		Socket[] servers = nHelper.findServers(4450);
+		Socket[] servers = nHelper.findServers(port);
 		String[] serversStr = new String[servers.length];
 		for(int i=0;i<servers.length;i++) { //TODO this stuff here could probably be done in NetworkHelper, as it isn't really relevant to Launcher.
 			Socket socket = servers[i];
@@ -90,7 +91,7 @@ public class Launcher extends JFrame {
 				roomTextDisplay.setText("Scanning... this will take several seconds.");
 				scanBtn.setEnabled(false);
 				serverBtn.setEnabled(false);
-				String[] servers = scan(4450);
+				String[] servers = scan(port);
 				createConnectButtons(servers);
 				scanBtn.setEnabled(true);
 				serverBtn.setEnabled(true);

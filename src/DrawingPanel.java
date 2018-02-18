@@ -7,20 +7,13 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-public class DrawingArea extends JPanel {
-	private BufferedImage drawImage;
+public class DrawingPanel extends ImagePanel {
 	private static final long serialVersionUID = -6796575090864175797L;
 	int cursorX, cursorY;
 	Font font = new Font("Comic Sans", Font.PLAIN, 20);
 	
-	public DrawingArea(int width, int height) {
-		setPreferredSize(new Dimension(width, height));
-		drawImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-	}
-
-	@Override
-	protected void paintComponent(Graphics g) {
-		g.drawImage(drawImage, 0, 0, this);
+	public DrawingPanel(int width, int height) {
+		super(width, height);
 	}
 
 	public void setTextCursor(int x, int y) {
@@ -30,7 +23,7 @@ public class DrawingArea extends JPanel {
 	
 	public void drawText(String text, Color color) {
 		if(text.equals("\b")) return;	
-		Graphics graphics = drawImage.getGraphics();
+		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
 		graphics.setFont(font);
 		int textWidth = graphics.getFontMetrics().stringWidth(text);
@@ -40,16 +33,9 @@ public class DrawingArea extends JPanel {
 	}
 	
 	public void drawPoint(int x, int y, Color color) {
-		Graphics graphics = drawImage.getGraphics();
+		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
 		graphics.fillOval(x, y, 10, 10);
-		repaint();
-	}
-
-	public void clearImage() {
-		Graphics graphics = drawImage.getGraphics();
-		graphics.setColor(Color.WHITE);
-		graphics.fillRect(0, 0, drawImage.getWidth(), drawImage.getHeight());
 		repaint();
 	}
 
