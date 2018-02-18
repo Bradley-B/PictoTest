@@ -2,15 +2,26 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 import javax.swing.ImageIcon;
 
 public class ConnectionInputListener extends Thread {
 	Socket connection = null;
+	ObjectInputStream inputStream;
+	ObjectOutputStream outputStream;
 	
 	public ConnectionInputListener(Socket connection) {
 		this.connection = connection;
+		try {
+			this.inputStream = new ObjectInputStream(connection.getInputStream());
+			this.outputStream = new ObjectOutputStream(connection.getOutputStream());
+		} catch (IOException e) {e.printStackTrace();}
+	}
+	
+	public ObjectOutputStream getOutputStream() {
+		return outputStream;
 	}
 	
 	public Socket getConnection() {
@@ -32,7 +43,6 @@ public class ConnectionInputListener extends Thread {
 	@Override
 	public void run() {
 		try {
-			ObjectInputStream inputStream = new ObjectInputStream(connection.getInputStream());
 			while(!Thread.interrupted() && !connection.isClosed()) {
 				Object object = inputStream.readObject();
 				System.out.println("recieved object");
@@ -41,9 +51,9 @@ public class ConnectionInputListener extends Thread {
 					Connection.getInstance().broadcastImage(image);
 				}
 			}
-		}catch (Exception e) {
+		} catch (Exception e) {
 			Connection.getInstance().removeConnection(this);
-			try {connection.close();} catch (IOException e2) {e.printStackTrace();}
+			try {connection.close(); inputStream.close();} catch (IOException e2) {e.printStackTrace();}
 			System.out.println("connection to "+connection.getInetAddress()+" closed");
 		}
 	}
