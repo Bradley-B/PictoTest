@@ -35,5 +35,6 @@ public class ImagePanel extends JPanel {
 	
 	public void setImage(BufferedImage image) {
 		drawImage = image;
+		repaint();
 	}
 }

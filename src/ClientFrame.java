@@ -27,7 +27,7 @@ public class ClientFrame extends JFrame {
 	private ToolButton rainbowPenBtn = new ToolButton(new ImageIcon("rainbowPen.png")), 
 			customPenBtn = new ToolButton(new ImageIcon("blackPen.png")), 
 			textBtn = new ToolButton(new ImageIcon("text.png")), 
-			cameraBtn = new ToolButton(new ImageIcon("camera.png"));
+			sendBtn = new ToolButton(new ImageIcon("send.png"));
 	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, CAMERA;}
 	private Map<ToolButton, Tool> buttonMap = new LinkedHashMap<ToolButton, Tool>();
 
@@ -44,13 +44,14 @@ public class ClientFrame extends JFrame {
 		buttonMap.put(rainbowPenBtn, Tool.RAINBOW_PEN);
 		buttonMap.put(customPenBtn, Tool.CUSTOM_PEN);
 		buttonMap.put(textBtn, Tool.TEXT);
-
+		
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
 		toolPanel.setBackground(Color.WHITE);
 		Set<ToolButton> buttons = buttonMap.keySet();
 		for(ToolButton button : buttons) {
 			toolPanel.add(button);
 		}
+		toolPanel.add(sendBtn);
 		add(toolPanel, BorderLayout.EAST);
 
 		drawPanel = new DrawingPanel(width-toolPanel.getWidth(), height);
@@ -113,7 +114,9 @@ public class ClientFrame extends JFrame {
 			setSelectedTool(buttonMap.get(e.getSource()));
 			if(selectedTool==Tool.CUSTOM_PEN) {
 				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
-			}	
+			} else if(e.getSource()==sendBtn) {
+				Connection.getInstance().broadcastImage(drawPanel.getImage());
+			}
 			drawPanel.requestFocus();	
 		}
 	}

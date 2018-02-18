@@ -56,7 +56,7 @@ public class Launcher extends JFrame {
 	public void launch(String serverIP) {
 		ClientFrame clientFrame = new ClientFrame();
 		ConnectionFrame connectionFrame = new ConnectionFrame();
-		Connection.createInstance(connectionFrame, clientFrame, serverIP.equals("localhost"));
+		Connection.createInstance(connectionFrame, clientFrame, serverIP);
 		dispose();
 	}
 		
