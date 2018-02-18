@@ -110,8 +110,11 @@ public class ClientFrame extends JFrame {
 
 	private class Clicked implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {			
-			setSelectedTool(buttonMap.get(e.getSource()));
+		public void actionPerformed(ActionEvent e) {	
+			if(buttonMap.containsKey(e.getSource())) {
+				setSelectedTool(buttonMap.get(e.getSource()));				
+			}
+			
 			if(selectedTool==Tool.CUSTOM_PEN) {
 				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
 			} else if(e.getSource()==sendBtn) {

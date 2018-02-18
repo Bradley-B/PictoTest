@@ -17,6 +17,9 @@ public class ConnectionInputListener extends Thread {
 	}
 	
 	public ObjectOutputStream getObjectOutputStream() {
+		if(outputStream==null) {
+			try {outputStream = new ObjectOutputStream(connection.getOutputStream());} catch (IOException e) {}
+		}
 		return outputStream;
 	}
 	
@@ -39,8 +42,7 @@ public class ConnectionInputListener extends Thread {
 	@Override
 	public void run() {
 		try {
-			this.inputStream = new ObjectInputStream(connection.getInputStream());
-			this.outputStream = new ObjectOutputStream(connection.getOutputStream());
+			inputStream = new ObjectInputStream(connection.getInputStream());	
 		} catch (IOException e) {e.printStackTrace();}
 		
 		try {
