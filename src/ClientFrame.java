@@ -27,34 +27,30 @@ public class ClientFrame extends JFrame {
 	private ToolButton rainbowPenBtn = new ToolButton(new ImageIcon("rainbowPen.png")), 
 			customPenBtn = new ToolButton(new ImageIcon("blackPen.png")), 
 			textBtn = new ToolButton(new ImageIcon("text.png")), 
-			sendBtn = new ToolButton(new ImageIcon("send.png"));
-	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, CAMERA;}
-	private Map<ToolButton, Tool> buttonMap = new LinkedHashMap<ToolButton, Tool>();
-
+			sendBtn = new ToolButton(new ImageIcon("send.png")),
+			clearBtn = new ToolButton(new ImageIcon("eraser.png"));
+	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN;}
+	
 	public ClientFrame() {	
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(width, height);
 		setResizable(false);
 		setLocation((int)Launcher.SCREEN_SIZE.width/3, (int)(Launcher.SCREEN_SIZE.height/2));
-		setTitle("picto-test-client");
+		setTitle("Drawing");
 		setLayout(new BorderLayout());
 		Input input = new Input(this);
 
-		buttonMap.put(rainbowPenBtn, Tool.RAINBOW_PEN);
-		buttonMap.put(customPenBtn, Tool.CUSTOM_PEN);
-		buttonMap.put(textBtn, Tool.TEXT);
-		
+		toolPanel.add(rainbowPenBtn);
+		toolPanel.add(customPenBtn);
+		toolPanel.add(textBtn);
+		toolPanel.add(sendBtn);
+		toolPanel.add(clearBtn);
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
 		toolPanel.setBackground(Color.WHITE);
-		Set<ToolButton> buttons = buttonMap.keySet();
-		for(ToolButton button : buttons) {
-			toolPanel.add(button);
-		}
-		toolPanel.add(sendBtn);
 		add(toolPanel, BorderLayout.EAST);
 
-		drawPanel = new DrawingPanel(width-toolPanel.getWidth(), height);
+		drawPanel = new DrawingPanel(width, height);
 		drawPanel.addMouseListener(input);
 		drawPanel.addMouseMotionListener(input);
 		drawPanel.addKeyListener(input);
@@ -110,16 +106,20 @@ public class ClientFrame extends JFrame {
 
 	private class Clicked implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {	
-			if(buttonMap.containsKey(e.getSource())) {
-				setSelectedTool(buttonMap.get(e.getSource()));				
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource()==rainbowPenBtn) {
+				setSelectedTool(Tool.RAINBOW_PEN);
+			} else if(e.getSource()==customPenBtn) {
+				setSelectedTool(Tool.CUSTOM_PEN);
+				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
+			} else if(e.getSource()==textBtn) {
+				setSelectedTool(Tool.TEXT);
+			} else if(e.getSource()==sendBtn) {				
+				Connection.getInstance().deliverImage(drawPanel.getImage());
+			} else if(e.getSource()==clearBtn) {
+				getDrawPanel().clearImage();
 			}
 			
-			if(selectedTool==Tool.CUSTOM_PEN) {
-				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
-			} else if(e.getSource()==sendBtn) {
-				Connection.getInstance().deliverImage(drawPanel.getImage());
-			}
 			drawPanel.requestFocus();	
 		}
 	}

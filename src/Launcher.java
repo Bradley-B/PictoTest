@@ -1,10 +1,10 @@
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.Socket;
+import java.util.Random;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -12,6 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Launcher extends JFrame {
 	
@@ -21,6 +22,9 @@ public class Launcher extends JFrame {
 	JButton serverBtn = new JButton("Start a new room");
 	JLabel roomTextDisplay = new JLabel("");
 	JPanel connectBtnPanel = new JPanel();
+	JPanel namePanel = new JPanel();
+	JLabel name = new JLabel("Name:");
+	JTextField nameField = new JTextField("Player "+new Random().nextInt(9999), 10);
 	
 	public static void main(String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(false);
@@ -29,7 +33,7 @@ public class Launcher extends JFrame {
 
 	public Launcher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("picto-test");
+		setTitle("B Chat");
 		setSize(400, 300);
 		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -39,8 +43,13 @@ public class Launcher extends JFrame {
 		add(serverBtn);
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		add(roomTextDisplay);
+		add(Box.createRigidArea(new Dimension(0, 5)));
+		add(namePanel);
 		add(Box.createRigidArea(new Dimension(0, 20)));
 		add(connectBtnPanel);
+		
+		namePanel.add(name);
+		namePanel.add(nameField);
 		
 		scanBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		serverBtn.setAlignmentX(Component.CENTER_ALIGNMENT);

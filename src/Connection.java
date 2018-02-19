@@ -1,18 +1,11 @@
-import java.awt.Graphics;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -77,7 +70,6 @@ public class Connection {
 	}
 
 	public void deliverImage(BufferedImage image) {
-		System.out.println("delivering image");
 		try {
 			if(!isServer) {
 				ImageIcon sendableImage = new ImageIcon(image);
@@ -90,7 +82,6 @@ public class Connection {
 	}
 
 	public void broadcastImage(BufferedImage image) {
-		System.out.println("broadcasting image");
 		ImageIcon sendableImage = new ImageIcon(image);
 		try {
 			if(isServer) {

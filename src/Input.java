@@ -1,7 +1,4 @@
 import java.awt.event.MouseMotionListener;
-import java.util.Random;
-import java.awt.Button;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;

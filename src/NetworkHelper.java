@@ -1,6 +1,5 @@
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
-import java.net.PortUnreachableException;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -15,7 +14,7 @@ public class NetworkHelper {
 	
 	public Socket[] findServers(int port) {
 		ExecutorService threadPool = Executors.newCachedThreadPool();
-		ArrayList<Future> tasks = new ArrayList<>();
+		ArrayList<Future<?>> tasks = new ArrayList<>();
 		ArrayList<NetworkHelperConnectThread> threads = new ArrayList<>();
 		
 		for(String ip : getActiveIPv4Addresses()) {

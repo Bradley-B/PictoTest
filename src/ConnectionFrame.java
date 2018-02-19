@@ -11,7 +11,7 @@ public class ConnectionFrame extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(width, height);
 		setLocation(Launcher.SCREEN_SIZE.width/3, (Launcher.SCREEN_SIZE.height/8));
-		setTitle("picto-test-remote");
+		setTitle("Room Dialog");
 		setVisible(true);
 		
 		imagePanel = new ImagePanel(width, height);

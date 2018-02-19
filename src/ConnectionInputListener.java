@@ -48,7 +48,6 @@ public class ConnectionInputListener extends Thread {
 		try {
 			while(!Thread.interrupted() && !connection.isClosed()) {
 				Object object = inputStream.readObject();
-				System.out.println("recieved object");
 				if(object instanceof ImageIcon) {
 					BufferedImage image = toBufferedImage(((ImageIcon) object));
 					Connection.getInstance().broadcastImage(image);
