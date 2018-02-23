@@ -3,7 +3,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.Box;
@@ -15,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class Launcher extends JFrame {
-	
+
 	private static final long serialVersionUID = 8111960529946411805L;
 	public static final Dimension SCREEN_SIZE = Toolkit.getDefaultToolkit().getScreenSize();
 	JButton scanBtn = new JButton("Search for available rooms");
@@ -25,10 +29,34 @@ public class Launcher extends JFrame {
 	JPanel namePanel = new JPanel();
 	JLabel name = new JLabel("Name:");
 	JTextField nameField = new JTextField("Player "+new Random().nextInt(9999), 10);
-	
+
 	public static void main(String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new Launcher();
+	}
+
+	/**
+	 * fuck me up fam
+	 */
+	public static void reset() {
+		try {
+			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+			File currentJar = new File(Launcher.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+			/* is it a jar file? */
+			if(!currentJar.getName().endsWith(".jar"))
+				throw new Exception("I don't know how to re-launch this");
+
+			/* Build command: java -jar application.jar */
+			final ArrayList<String> command = new ArrayList<String>();
+			command.add(javaBin);
+			command.add("-jar");
+			command.add(currentJar.getPath());
+
+			final ProcessBuilder builder = new ProcessBuilder(command);
+			builder.start();
+		} catch (Exception e) {e.printStackTrace();} finally {System.exit(0);}
+
 	}
 
 	public Launcher() {
@@ -47,28 +75,28 @@ public class Launcher extends JFrame {
 		add(namePanel);
 		add(Box.createRigidArea(new Dimension(0, 20)));
 		add(connectBtnPanel);
-		
+
 		namePanel.add(name);
 		namePanel.add(nameField);
-		
+
 		scanBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		serverBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		roomTextDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
-		
+
 		Listener listener = new Listener();
 		scanBtn.addActionListener(listener);
 		serverBtn.addActionListener(listener);
-		
+
 		setVisible(true);
 	}
-	
+
 	public void launch(String serverIP) {
-		ClientFrame clientFrame = new ClientFrame();
 		ConnectionFrame connectionFrame = new ConnectionFrame();
+		ClientFrame clientFrame = new ClientFrame(nameField.getText());
 		Connection.createInstance(connectionFrame, clientFrame, serverIP);
 		dispose();
 	}
-		
+
 	/**
 	 * Scan for servers to connect to on a specified port. Beware this is a blocking call, and the thread will wait until it is completed.
 	 * @param port the port to try and connect to
@@ -86,7 +114,7 @@ public class Launcher extends JFrame {
 		}
 		return serversStr;
 	}
-	
+
 	/**
 	 * It's scan() and createConnectButtons(), but it's asynchronous. You're welcome.
 	 * @param port
@@ -109,7 +137,7 @@ public class Launcher extends JFrame {
 		});
 		thread.start();
 	}
-	
+
 	public void createConnectButtons(String[] servers) {
 		for(String server : servers) {
 			JButton connectBtn = new JButton("Connect to "+server);
@@ -124,12 +152,12 @@ public class Launcher extends JFrame {
 			redraw();
 		}
 	}
-	
+
 	public void redraw() {
 		revalidate();
 		repaint();
 	}
-	
+
 	private class Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -141,5 +169,5 @@ public class Launcher extends JFrame {
 			}
 		}
 	}
-	
+
 }

@@ -6,9 +6,12 @@ public class DrawingPanel extends ImagePanel {
 	private static final long serialVersionUID = -6796575090864175797L;
 	int cursorX, cursorY;
 	Font font = new Font("Comic Sans", Font.PLAIN, 20);
+	String name;
 	
-	public DrawingPanel(int width, int height) {
+	public DrawingPanel(int width, int height, String name) {
 		super(width, height);
+		this.name = name;
+		sign();
 	}
 
 	public void setTextCursor(int x, int y) {
@@ -34,6 +37,20 @@ public class DrawingPanel extends ImagePanel {
 		repaint();
 	}
 
+	public void sign() {
+		cursorX = 400;
+		cursorY = 350;
+		drawText("~"+name, Color.BLACK);
+	}
+	
+	@Override
+	public void clearImage() {
+		super.clearImage();
+		if(name!=null) {
+			sign();			
+		}
+	}
+	
 	public void erasePoint(int x, int y) {
 		drawPoint(x, y, Color.WHITE);
 	}

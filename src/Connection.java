@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.jar.Attributes.Name;
 
 import javax.swing.ImageIcon;
 
@@ -16,12 +17,12 @@ public class Connection {
 	private ClientFrame clientFrame = null;
 	private List<ConnectionInputListener> clientConnections = Collections.synchronizedList(new ArrayList<ConnectionInputListener>(0));
 	private ConnectionInputListener serverConnection = new ConnectionInputListener(new Socket());
-	boolean isServer;
-
+	private boolean isServer;
+	
 	private Connection(ConnectionFrame connectionDisplay, ClientFrame client, String serverIP) {
 		this.connectionDisplay = connectionDisplay;
 		this.clientFrame = client;
-
+		
 		isServer = serverIP.equals("localhost");
 		if(isServer) {
 			Thread pingThread = new Thread(()->{
@@ -94,13 +95,23 @@ public class Connection {
 				}
 			}
 		} catch (IOException e) {}
+		
 		connectionDisplay.getImagePanel().setImage(image);
+		Thread displayThread = new Thread(()->{
+			connectionDisplay.setLocationRelativeTo(null);
+			connectionDisplay.setVisible(true);
+			try {Thread.sleep(3000);} catch (Exception e) {}
+			connectionDisplay.setVisible(false);
+		});
+		displayThread.setDaemon(true);
+		displayThread.start();
+		
 	}
 
 	public ClientFrame getClientFrame() {
 		return clientFrame;
 	}
-
+	
 	public ConnectionFrame getConnectionFrame() {
 		return connectionDisplay;
 	}
@@ -109,7 +120,7 @@ public class Connection {
 		if(instance==null) throw new NullPointerException("there is no instance to get");
 		return instance;
 	}
-
+	
 	public static Connection createInstance(ConnectionFrame connectionDisplay, ClientFrame client, String serverIP) {
 		if(instance==null) {
 			instance = new Connection(connectionDisplay, client, serverIP);

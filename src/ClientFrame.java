@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import javax.security.auth.x500.X500Principal;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -24,33 +25,36 @@ public class ClientFrame extends JFrame {
 	private DrawingPanel drawPanel;
 	private Tool selectedTool = Tool.RAINBOW_PEN;
 	private Clicked listener = new Clicked();
-	private ToolButton rainbowPenBtn = new ToolButton(new ImageIcon("rainbowPen.png")), 
-			customPenBtn = new ToolButton(new ImageIcon("blackPen.png")), 
-			textBtn = new ToolButton(new ImageIcon("text.png")), 
-			sendBtn = new ToolButton(new ImageIcon("send.png")),
-			clearBtn = new ToolButton(new ImageIcon("eraser.png"));
+	private ToolButton rainbowPenBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("rainbowPen.png"))), 
+			customPenBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("blackPen.png"))), 
+			textBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("text.png"))), 
+			sendBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("send.png"))),
+			backBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("back.png"))),
+			clearBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png")));
+			
 	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN;}
 	
-	public ClientFrame() {	
+	public ClientFrame(String name) {	
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(width, height);
 		setResizable(false);
-		setLocation((int)Launcher.SCREEN_SIZE.width/3, (int)(Launcher.SCREEN_SIZE.height/2));
+		setLocationRelativeTo(null);
 		setTitle("Drawing");
 		setLayout(new BorderLayout());
 		Input input = new Input(this);
-
+		
 		toolPanel.add(rainbowPenBtn);
 		toolPanel.add(customPenBtn);
 		toolPanel.add(textBtn);
 		toolPanel.add(sendBtn);
 		toolPanel.add(clearBtn);
+		toolPanel.add(backBtn);
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
 		toolPanel.setBackground(Color.WHITE);
 		add(toolPanel, BorderLayout.EAST);
 
-		drawPanel = new DrawingPanel(width, height);
+		drawPanel = new DrawingPanel(width, height, name);
 		drawPanel.addMouseListener(input);
 		drawPanel.addMouseMotionListener(input);
 		drawPanel.addKeyListener(input);
@@ -118,6 +122,8 @@ public class ClientFrame extends JFrame {
 				Connection.getInstance().deliverImage(drawPanel.getImage());
 			} else if(e.getSource()==clearBtn) {
 				getDrawPanel().clearImage();
+			} else if(e.getSource()==backBtn) {
+				Launcher.reset();
 			}
 			
 			drawPanel.requestFocus();	

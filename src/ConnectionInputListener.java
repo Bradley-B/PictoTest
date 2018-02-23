@@ -53,9 +53,13 @@ public class ConnectionInputListener extends Thread {
 					Connection.getInstance().broadcastImage(image);
 				}
 			}
-		} catch (Exception e) {
+		} catch (Exception e) {} finally {
 			Connection.getInstance().removeConnection(this);
-			try {connection.close(); inputStream.close();} catch (IOException e2) {e.printStackTrace();}
+			try {
+				inputStream.close();
+				outputStream.close();
+				connection.close();
+			} catch (IOException e) {}
 			System.out.println("connection to "+connection.getInetAddress()+" closed");
 		}
 	}
