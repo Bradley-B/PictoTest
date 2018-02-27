@@ -7,7 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.jar.Attributes.Name;
 
 import javax.swing.ImageIcon;
 

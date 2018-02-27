@@ -29,7 +29,6 @@ public class NetworkHelperConnectThread implements Runnable {
 	@Override
 	public void run() {
 		socket = tryConnection(ip, port, timeoutMs);
-		//System.out.println("I just scanned "+ip);
 	}
 
 	public Socket getSocket() {

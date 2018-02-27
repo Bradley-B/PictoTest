@@ -4,9 +4,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
-import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
-import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,9 +35,6 @@ public class Launcher extends JFrame {
 		new Launcher();
 	}
 
-	/**
-	 * fuck me up fam
-	 */
 	public static void reset() {
 		try {
 			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -61,7 +58,7 @@ public class Launcher extends JFrame {
 
 	public Launcher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setTitle("B Chat");
+		setTitle("Chatterbox");
 		setSize(400, 300);
 		setLocationRelativeTo(null);
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
@@ -116,8 +113,8 @@ public class Launcher extends JFrame {
 	}
 
 	/**
-	 * It's scan() and createConnectButtons(), but it's asynchronous. You're welcome.
-	 * @param port
+	 * It's scan() and createConnectButtons(), but it's asynchronous.
+	 * @param port the port to connect to
 	 */
 	public void asyncUpdate(int port) {
 		Thread thread = new Thread(new Runnable() {
@@ -132,32 +129,40 @@ public class Launcher extends JFrame {
 				createConnectButtons(servers);
 				scanBtn.setEnabled(true);
 				serverBtn.setEnabled(true);
-				roomTextDisplay.setText("found "+servers.length+" available rooms(s)");
+				roomTextDisplay.setText("found "+servers.length+" available room(s)");
 			}
 		});
 		thread.start();
 	}
 
 	public void createConnectButtons(String[] servers) {
-		for(String server : servers) {
-			JButton connectBtn = new JButton("Connect to "+server);
-			connectBtn.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					launch(server);
-				}
-			});
-			connectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
-			connectBtnPanel.add(connectBtn);
-			redraw();
-		}
+		try {
+			for(String server : servers) {
+				JButton connectBtn = new JButton("Connect to "+InetAddress.getByName(server).getCanonicalHostName());
+				connectBtn.addActionListener(new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						launch(server);
+					}
+				});
+				connectBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+				connectBtnPanel.add(connectBtn);
+				redraw();
+			}
+		} catch (UnknownHostException e) {}
 	}
 
+	/**
+	 * Refresh the JPanel by revalidating it's components and repainting it.
+	 */
 	public void redraw() {
 		revalidate();
 		repaint();
 	}
 
+	/**
+	 * Listens for two buttons: the scan button and the server button. It reacts to them accordingly, and does nothing else if added to a different button.
+	 */
 	private class Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {

@@ -40,7 +40,7 @@ public class ClientFrame extends JFrame {
 		setSize(width, height);
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setTitle("Drawing");
+		setTitle("Easel");
 		setLayout(new BorderLayout());
 		Input input = new Input(this);
 		

@@ -27,7 +27,7 @@ public class ConnectionInputListener extends Thread {
 		return connection;
 	}
 	
-	public BufferedImage toBufferedImage(ImageIcon icon) {
+	public static BufferedImage toBufferedImage(ImageIcon icon) {
 		BufferedImage bi = new BufferedImage(
 			    icon.getIconWidth(),
 			    icon.getIconHeight(),
@@ -51,6 +51,8 @@ public class ConnectionInputListener extends Thread {
 				if(object instanceof ImageIcon) {
 					BufferedImage image = toBufferedImage(((ImageIcon) object));
 					Connection.getInstance().broadcastImage(image);
+				} else if(object instanceof String) {
+					System.out.println((String) object);
 				}
 			}
 		} catch (Exception e) {} finally {
