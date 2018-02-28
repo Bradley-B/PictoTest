@@ -5,6 +5,7 @@ import java.awt.Graphics;
 public class DrawingPanel extends ImagePanel {
 	private static final long serialVersionUID = -6796575090864175797L;
 	int cursorX, cursorY;
+	int clickCursorX, clickCursorY;
 	Font font = new Font("Comic Sans", Font.PLAIN, 20);
 	String name;
 	
@@ -17,16 +18,26 @@ public class DrawingPanel extends ImagePanel {
 	public void setTextCursor(int x, int y) {
 		cursorX = x;
 		cursorY = y;
+		clickCursorX = cursorX;
+		clickCursorY = cursorY;
 	}
 	
 	public void drawText(String text, Color color) {
-		if(text.equals("\b")) return;	
 		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
 		graphics.setFont(font);
+		
+		if(text.equals("\n"))  {
+			cursorY+= graphics.getFontMetrics().getHeight();
+			cursorX = clickCursorX;
+			return;
+		} else if(text.equals("\b")) {
+			return;
+		}
+
 		int textWidth = graphics.getFontMetrics().stringWidth(text);
 		graphics.drawString(text, cursorX, cursorY);
-		cursorX+=(textWidth);
+		cursorX+=textWidth;
 		repaint();
 	}
 	

@@ -77,7 +77,7 @@ public class Input implements MouseListener, MouseMotionListener, KeyListener {
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		client.drawText(""+e.getKeyChar());	
+		client.drawText(""+e.getKeyChar());
 	}
 
 }
