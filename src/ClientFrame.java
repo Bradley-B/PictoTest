@@ -30,7 +30,9 @@ public class ClientFrame extends JFrame {
 			textBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("text.png"))), 
 			sendBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("send.png"))),
 			backBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("back.png"))),
-			clearBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png")));
+			clearBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
+			sizeUpBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
+			sizeDownBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png")));
 			
 	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN;}
 	
@@ -50,6 +52,8 @@ public class ClientFrame extends JFrame {
 		toolPanel.add(sendBtn);
 		toolPanel.add(clearBtn);
 		toolPanel.add(backBtn);
+		toolPanel.add(sizeUpBtn);
+		toolPanel.add(sizeDownBtn);
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
 		toolPanel.setBackground(Color.WHITE);
 		add(toolPanel, BorderLayout.EAST);
@@ -124,10 +128,28 @@ public class ClientFrame extends JFrame {
 				getDrawPanel().clearImage();
 			} else if(e.getSource()==backBtn) {
 				Launcher.reset();
+			} else if(e.getSource()==sizeUpBtn) {
+				getDrawPanel().addPointSize(3);
+				managePointSizeButtons();
+			} else if(e.getSource()==sizeDownBtn) {
+				getDrawPanel().addPointSize(-3);
+				managePointSizeButtons();
 			}
 			
 			drawPanel.requestFocus();	
 		}
+		
+		public void managePointSizeButtons() {
+			if(getDrawPanel().getPointSize()<=4) {
+				sizeDownBtn.setEnabled(false);
+			} else {
+				sizeDownBtn.setEnabled(true);
+			}
+			if(getDrawPanel().getPointSize()>=25) {
+				sizeUpBtn.setEnabled(false);
+			} else {
+				sizeUpBtn.setEnabled(true);
+			}
+		}
 	}
-
 }

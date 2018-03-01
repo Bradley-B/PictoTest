@@ -6,8 +6,8 @@ public class DrawingPanel extends ImagePanel {
 	private static final long serialVersionUID = -6796575090864175797L;
 	int cursorX, cursorY;
 	int clickCursorX, clickCursorY;
-	Font font = new Font("Comic Sans", Font.PLAIN, 20);
 	String name;
+	int pointSize = 10;
 	
 	public DrawingPanel(int width, int height, String name) {
 		super(width, height);
@@ -22,10 +22,18 @@ public class DrawingPanel extends ImagePanel {
 		clickCursorY = cursorY;
 	}
 	
+	public void addPointSize(int pixels) {
+		pointSize += pixels;
+	}
+	
+	public int getPointSize() {
+		return pointSize;
+	}
+	
 	public void drawText(String text, Color color) {
 		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
-		graphics.setFont(font);
+		graphics.setFont(new Font("Comic Sans", Font.PLAIN, pointSize*2));
 		
 		if(text.equals("\n"))  {
 			cursorY+= graphics.getFontMetrics().getHeight();
@@ -44,7 +52,7 @@ public class DrawingPanel extends ImagePanel {
 	public void drawPoint(int x, int y, Color color) {
 		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
-		graphics.fillOval(x, y, 10, 10);
+		graphics.fillOval(x, y, pointSize, pointSize);
 		repaint();
 	}
 
