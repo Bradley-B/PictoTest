@@ -97,10 +97,9 @@ public class Connection {
 		
 		connectionDisplay.getImagePanel().setImage(image);
 		Thread displayThread = new Thread(()->{
-			connectionDisplay.setLocationRelativeTo(null);
-			connectionDisplay.setVisible(true);
-			try {Thread.sleep(3000);} catch (Exception e) {}
-			connectionDisplay.setVisible(false);
+		connectionDisplay.setVisible(true);
+		//	try {Thread.sleep(3000);} catch (Exception e) {}
+		//	connectionDisplay.setVisible(false);
 		});
 		displayThread.setDaemon(true);
 		displayThread.start();

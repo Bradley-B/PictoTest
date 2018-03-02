@@ -8,7 +8,7 @@ public class ConnectionFrame extends JFrame {
 	private ImagePanel imagePanel;
 	
 	public ConnectionFrame() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setSize(width, height);
 		setTitle("Room Dialog");
 		setVisible(false);

@@ -57,9 +57,11 @@ public class DrawingPanel extends ImagePanel {
 	}
 
 	public void sign() {
-		cursorX = 400;
-		cursorY = 350;
-		drawText("~"+name, Color.BLACK);
+		Graphics graphics = getImage().getGraphics();
+		graphics.setColor(Color.BLACK);
+		graphics.setFont(new Font("Comic Sans", Font.PLAIN, 15));
+		graphics.drawString("-"+name, 400, 350);
+		repaint();
 	}
 	
 	@Override

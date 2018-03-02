@@ -35,6 +35,9 @@ public class Launcher extends JFrame {
 		new Launcher();
 	}
 
+	/**
+	 * Run a new Chatterbox instance and exit the old one.
+	 */
 	public static void reset() {
 		try {
 			final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
@@ -87,6 +90,10 @@ public class Launcher extends JFrame {
 		setVisible(true);
 	}
 
+	/**
+	 * Start the program. If the serverIP is "localhost" then the program will launch as a server.
+	 * @param serverIP the LAN IP address of the server to connect to
+	 */
 	public void launch(String serverIP) {
 		ConnectionFrame connectionFrame = new ConnectionFrame();
 		ClientFrame clientFrame = new ClientFrame(nameField.getText());
@@ -135,6 +142,10 @@ public class Launcher extends JFrame {
 		thread.start();
 	}
 
+	/**
+	 * Makes buttons for the user to connect to the available servers
+	 * @param servers a list of the available servers to connect to
+	 */
 	public void createConnectButtons(String[] servers) {
 		try {
 			for(String server : servers) {
