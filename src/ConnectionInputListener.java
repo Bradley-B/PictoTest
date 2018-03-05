@@ -27,6 +27,11 @@ public class ConnectionInputListener extends Thread {
 		return connection;
 	}
 	
+	/**
+	 * Convert an <code>ImageIcon</code> to a <code>BufferedImage</code> in order to display it.
+	 * @param icon the image icon to convert
+	 * @return the converted <code>BufferedImage</code>
+	 */
 	public static BufferedImage toBufferedImage(ImageIcon icon) {
 		BufferedImage bi = new BufferedImage(
 			    icon.getIconWidth(),

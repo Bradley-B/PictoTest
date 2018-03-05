@@ -59,6 +59,9 @@ public class Launcher extends JFrame {
 
 	}
 
+	/**
+	 * The launcher for the program. Sets up the layout for all the components and shows the JFrame.
+	 */
 	public Launcher() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setTitle("Chatterbox");

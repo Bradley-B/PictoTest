@@ -122,7 +122,8 @@ public class ClientFrame extends JFrame {
 				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
 			} else if(e.getSource()==textBtn) {
 				setSelectedTool(Tool.TEXT);
-			} else if(e.getSource()==sendBtn) {				
+			} else if(e.getSource()==sendBtn) {
+				drawPanel.sign();
 				Connection.getInstance().deliverImage(drawPanel.getImage());
 			} else if(e.getSource()==clearBtn) {
 				getDrawPanel().clearImage();

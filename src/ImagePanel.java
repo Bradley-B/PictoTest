@@ -10,9 +10,9 @@ public class ImagePanel extends JPanel {
 	private BufferedImage drawImage;
 	
 	/**
-	 * A JPanel that has a BufferedImage image as its sole component.
-	 * @param width
-	 * @param height
+	 * A JPanel that has a <code>BufferedImage</code> as its sole component.
+	 * @param width the width of the <code>BufferedImage</code>
+	 * @param height the height of the <code>BufferedImage</code>
 	 */
 	public ImagePanel(int width, int height) {
 		setPreferredSize(new Dimension(width, height));
@@ -22,6 +22,9 @@ public class ImagePanel extends JPanel {
 		repaint();
 	}
 	
+	/**
+	 * Paints the stored <code>BufferedImage</code> onto the JFrame. <code>repaint()</code> will call this method. 
+	 */
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(drawImage, 0, 0, this);
@@ -38,7 +41,7 @@ public class ImagePanel extends JPanel {
 	}
 	
 	/**
-	 * Get the image currently being displayed
+	 * Get the <code>BufferedImage</code> currently being displayed
 	 * @return the image currently being displayed
 	 */
 	public BufferedImage getImage() {
