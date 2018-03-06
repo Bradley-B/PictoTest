@@ -1,6 +1,8 @@
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DrawingPanel extends ImagePanel {
 	private static final long serialVersionUID = -6796575090864175797L;
@@ -55,6 +57,9 @@ public class DrawingPanel extends ImagePanel {
 	 * @param color the color to draw the text in
 	 */
 	public void drawText(String text, Color color) {
+		
+		floodFill(cursorX, cursorY, Color.GREEN);
+		
 		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
 		graphics.setFont(new Font("Comic Sans", Font.PLAIN, pointSize*2));
@@ -86,6 +91,46 @@ public class DrawingPanel extends ImagePanel {
 		repaint();
 	}
 
+	public void setPixelColor(int x, int y, Color color) {
+		Graphics graphics = getImage().getGraphics();
+		graphics.setColor(color);
+		graphics.drawRect(x, y, 1, 1);
+	}
+	
+	public Color getPixelColor(int x, int y) {
+		int pixel = getImage().getRGB(x, y);
+		return new Color((pixel & 0x00ff0000) >> 16, (pixel & 0x0000ff00) >> 8, pixel & 0x000000ff);
+	}
+	
+	public void floodFill(int x, int y, Color replacementColor) {
+		Color targetColor = getPixelColor(x, y);
+		if(targetColor.equals(replacementColor)) return;
+		List<Point> queue = new ArrayList<>();
+		setPixelColor(x, y, replacementColor);
+		queue.add(new Point(x, y));
+		while(!queue.isEmpty()) {
+			Point n = queue.get(0);
+			queue.remove(0);
+			if(n.x-1>0 && getPixelColor(n.x-1, n.y).equals(targetColor)) {
+				setPixelColor(n.x-1, n.y, replacementColor);
+				queue.add(new Point(n.x-1, n.y));
+			}
+			if(getPixelColor(n.x+1, n.y).equals(targetColor)) {
+				setPixelColor(n.x+1, n.y, replacementColor);
+				queue.add(new Point(n.x+1, n.y));
+			}
+			if(getPixelColor(n.x, n.y-1).equals(targetColor)) {
+				setPixelColor(n.x, n.y-1, replacementColor);
+				queue.add(new Point(n.x, n.y-1));
+			}
+			if(getPixelColor(n.x, n.y+1).equals(targetColor)) {
+				setPixelColor(n.x, n.y+1, replacementColor);
+				queue.add(new Point(n.x, n.y+1));
+			}
+		}
+		repaint();
+	}
+	
 	/**
 	 * Sign the stored name onto the panel.
 	 */
