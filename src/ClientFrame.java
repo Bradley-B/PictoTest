@@ -29,13 +29,14 @@ public class ClientFrame extends JFrame {
 			customPenBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("blackPen.png"))), 
 			textBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("text.png"))), 
 			sendBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("send.png"))),
+			paintBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
 			backBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("back.png"))),
 			clearBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
 			sizeUpBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
 			sizeDownBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png")));
-			
-	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN;}
-	
+
+	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, PAINT;}
+
 	public ClientFrame(String name) {	
 		setVisible(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -45,15 +46,15 @@ public class ClientFrame extends JFrame {
 		setTitle("Easel");
 		setLayout(new BorderLayout());
 		Input input = new Input(this);
-		
+
 		toolPanel.add(rainbowPenBtn);
 		toolPanel.add(customPenBtn);
 		toolPanel.add(textBtn);
-		toolPanel.add(sendBtn);
+		toolPanel.add(paintBtn);
 		toolPanel.add(clearBtn);
-		toolPanel.add(backBtn);
 		toolPanel.add(sizeUpBtn);
 		toolPanel.add(sizeDownBtn);
+		toolPanel.add(sendBtn);
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
 		toolPanel.setBackground(Color.WHITE);
 		add(toolPanel, BorderLayout.EAST);
@@ -74,16 +75,20 @@ public class ClientFrame extends JFrame {
 	public void drawLeftMouse(MouseEvent e) {
 		int x = e.getX(), y = e.getY();
 		switch (getSelectedTool()) {
-			case RAINBOW_PEN:
-				drawPanel.drawPoint(x, y,  new Color(Color.HSBtoRGB((float)Math.random(), 1f, 1f)));
-				break;
-			case CUSTOM_PEN: 
-				drawPanel.drawPoint(x, y, penColor);
-				break;
-			case TEXT: 
-				drawPanel.setTextCursor(x, y);
-			default:
-				break;
+		case RAINBOW_PEN:
+			drawPanel.drawPoint(x, y,  new Color(Color.HSBtoRGB((float)Math.random(), 1f, 1f)));
+			break;
+		case CUSTOM_PEN: 
+			drawPanel.drawPoint(x, y, penColor);
+			break;
+		case TEXT: 
+			drawPanel.setTextCursor(x, y);
+			break;
+		case PAINT:
+			drawPanel.floodFill(x, y, penColor);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -119,7 +124,7 @@ public class ClientFrame extends JFrame {
 				setSelectedTool(Tool.RAINBOW_PEN);
 			} else if(e.getSource()==customPenBtn) {
 				setSelectedTool(Tool.CUSTOM_PEN);
-				penColor = JColorChooser.showDialog(null, "Pick A Pen Color", penColor);
+				penColor = JColorChooser.showDialog(null, "Pick A Color", penColor);
 			} else if(e.getSource()==textBtn) {
 				setSelectedTool(Tool.TEXT);
 			} else if(e.getSource()==sendBtn) {
@@ -135,11 +140,15 @@ public class ClientFrame extends JFrame {
 			} else if(e.getSource()==sizeDownBtn) {
 				getDrawPanel().addPointSize(-3);
 				managePointSizeButtons();
+			} else if(e.getSource()==paintBtn) {
+				setSelectedTool(Tool.PAINT);
+				penColor = JColorChooser.showDialog(null, "Pick A Color", penColor);
 			}
-			
+
+			toolPanel.setBackground(penColor);
 			drawPanel.requestFocus();	
 		}
-		
+
 		public void managePointSizeButtons() {
 			if(getDrawPanel().getPointSize()<=4) {
 				sizeDownBtn.setEnabled(false);

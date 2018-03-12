@@ -10,7 +10,9 @@ public class DrawingPanel extends ImagePanel {
 	int clickCursorX, clickCursorY;
 	String name;
 	int pointSize = 10;
-
+	final int WIDTH;
+	final int HEIGHT;
+	
 	/**
 	 * An <code>ImagePanel</code> that can be drawn on.
 	 * @param width the width of the <code>BufferedImage</code>
@@ -20,6 +22,8 @@ public class DrawingPanel extends ImagePanel {
 	public DrawingPanel(int width, int height, String name) {
 		super(width, height);
 		this.name = name;
+		this.WIDTH = width;
+		this.HEIGHT = height;
 		sign();
 	}
 
@@ -57,9 +61,6 @@ public class DrawingPanel extends ImagePanel {
 	 * @param color the color to draw the text in
 	 */
 	public void drawText(String text, Color color) {
-		
-		floodFill(cursorX, cursorY, Color.GREEN);
-		
 		Graphics graphics = getImage().getGraphics();
 		graphics.setColor(color);
 		graphics.setFont(new Font("Comic Sans", Font.PLAIN, pointSize*2));
@@ -115,17 +116,17 @@ public class DrawingPanel extends ImagePanel {
 				setPixelColor(n.x-1, n.y, replacementColor);
 				queue.add(new Point(n.x-1, n.y));
 			}
-			if(getPixelColor(n.x+1, n.y).equals(targetColor)) {
-				setPixelColor(n.x+1, n.y, replacementColor);
-				queue.add(new Point(n.x+1, n.y));
+			if(n.x<WIDTH-2 && getPixelColor(n.x+2, n.y).equals(targetColor)) {
+				setPixelColor(n.x+2, n.y, replacementColor);
+				queue.add(new Point(n.x+2, n.y));
 			}
-			if(getPixelColor(n.x, n.y-1).equals(targetColor)) {
+			if(n.y-1>0 && getPixelColor(n.x, n.y-1).equals(targetColor)) {
 				setPixelColor(n.x, n.y-1, replacementColor);
 				queue.add(new Point(n.x, n.y-1));
 			}
-			if(getPixelColor(n.x, n.y+1).equals(targetColor)) {
-				setPixelColor(n.x, n.y+1, replacementColor);
-				queue.add(new Point(n.x, n.y+1));
+			if(n.y<HEIGHT-2 && getPixelColor(n.x, n.y+2).equals(targetColor)) {
+				setPixelColor(n.x, n.y+2, replacementColor);
+				queue.add(new Point(n.x, n.y+2));
 			}
 		}
 		repaint();
