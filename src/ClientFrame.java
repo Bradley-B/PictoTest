@@ -29,13 +29,14 @@ public class ClientFrame extends JFrame {
 			customPenBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("blackPen.png"))), 
 			textBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("text.png"))), 
 			sendBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("send.png"))),
-			paintBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
+			paintBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("paint.png"))),
 			backBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("back.png"))),
 			clearBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
-			sizeUpBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png"))),
-			sizeDownBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("eraser.png")));
+			eyedropBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("dropper.png"))),
+			sizeUpBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("up.png"))),
+			sizeDownBtn = new ToolButton(new ImageIcon(ClientFrame.class.getResource("down.png")));
 
-	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, PAINT;}
+	private static enum Tool {RAINBOW_PEN, TEXT, CUSTOM_PEN, PAINT, EYEDROP;}
 
 	public ClientFrame(String name) {	
 		setVisible(true);
@@ -47,7 +48,18 @@ public class ClientFrame extends JFrame {
 		setLayout(new BorderLayout());
 		Input input = new Input(this);
 
+		rainbowPenBtn.setToolTipText("draw in rainbow!");
+		eyedropBtn.setToolTipText("set the color of your choice to whatever you click");
+		customPenBtn.setToolTipText("draw in a color of your choice");
+		textBtn.setToolTipText("draw text by clicking the screen and typing");
+		paintBtn.setToolTipText("fill the selected area with a color of your choice");
+		clearBtn.setToolTipText("clear the image");
+		sizeUpBtn.setToolTipText("make the tools bigger");
+		sizeDownBtn.setToolTipText("make the tools smaller");
+		sendBtn.setToolTipText("send your image to the connected room");
+		
 		toolPanel.add(rainbowPenBtn);
+		toolPanel.add(eyedropBtn);
 		toolPanel.add(customPenBtn);
 		toolPanel.add(textBtn);
 		toolPanel.add(paintBtn);
@@ -56,7 +68,7 @@ public class ClientFrame extends JFrame {
 		toolPanel.add(sizeDownBtn);
 		toolPanel.add(sendBtn);
 		toolPanel.setLayout(new BoxLayout(toolPanel, BoxLayout.Y_AXIS));
-		toolPanel.setBackground(Color.WHITE);
+		toolPanel.setBackground(penColor);
 		add(toolPanel, BorderLayout.EAST);
 
 		drawPanel = new DrawingPanel(width, height, name);
@@ -86,6 +98,10 @@ public class ClientFrame extends JFrame {
 			break;
 		case PAINT:
 			drawPanel.floodFill(x, y, penColor);
+			break;
+		case EYEDROP:
+			penColor = drawPanel.getPixelColor(x, y);
+			toolPanel.setBackground(penColor);
 			break;
 		default:
 			break;
@@ -124,6 +140,7 @@ public class ClientFrame extends JFrame {
 				setSelectedTool(Tool.RAINBOW_PEN);
 			} else if(e.getSource()==customPenBtn) {
 				setSelectedTool(Tool.CUSTOM_PEN);
+				
 				penColor = JColorChooser.showDialog(null, "Pick A Color", penColor);
 			} else if(e.getSource()==textBtn) {
 				setSelectedTool(Tool.TEXT);
@@ -143,6 +160,8 @@ public class ClientFrame extends JFrame {
 			} else if(e.getSource()==paintBtn) {
 				setSelectedTool(Tool.PAINT);
 				penColor = JColorChooser.showDialog(null, "Pick A Color", penColor);
+			} else if(e.getSource()==eyedropBtn) {
+				setSelectedTool(Tool.EYEDROP);
 			}
 
 			toolPanel.setBackground(penColor);
