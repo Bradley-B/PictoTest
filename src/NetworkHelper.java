@@ -60,6 +60,7 @@ public class NetworkHelper {
 	}
 
 	private boolean validateIP(final String ip) {
+		//0.0.0.0
 		return Pattern.compile("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$").matcher(ip).matches();
 	}
 

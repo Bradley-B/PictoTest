@@ -94,13 +94,18 @@ public class DrawingPanel extends ImagePanel {
 
 	public void setPixelColor(int x, int y, Color color) {
 		Graphics graphics = getImage().getGraphics();
-		graphics.setColor(color);
-		graphics.drawRect(x, y, 1, 1);
+		if(graphics!=null) {
+			graphics.setColor(color);
+			graphics.drawRect(x, y, 1, 1);			
+		}
 	}
 	
 	public Color getPixelColor(int x, int y) {
 		int pixel = getImage().getRGB(x, y);
-		return new Color((pixel & 0x00ff0000) >> 16, (pixel & 0x0000ff00) >> 8, pixel & 0x000000ff);
+		int red = (pixel & 0x00ff0000) >> 16;
+		int green = (pixel & 0x0000ff00) >> 8;
+		int blue = pixel & 0x000000ff;
+		return new Color(red, green, blue);
 	}
 	
 	public void floodFill(int x, int y, Color replacementColor) {

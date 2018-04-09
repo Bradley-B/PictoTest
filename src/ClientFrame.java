@@ -4,11 +4,6 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
-import javax.security.auth.x500.X500Principal;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -128,8 +123,11 @@ public class ClientFrame extends JFrame {
 		private static final long serialVersionUID = 5266133043328726640L;
 		public ToolButton(ImageIcon icon) {
 			super(icon);
-			addActionListener(listener);
-			setPreferredSize(new Dimension(36, 36));
+			if(icon!=null) {
+				addActionListener(listener);				
+				setPreferredSize(new Dimension(36, 36));
+				
+			}
 		}
 	}
 
