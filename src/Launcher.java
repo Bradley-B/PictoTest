@@ -13,8 +13,10 @@ import java.util.Random;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -29,7 +31,8 @@ public class Launcher extends JFrame {
 	JPanel namePanel = new JPanel();
 	JLabel name = new JLabel("Name:");
 	JTextField nameField = new JTextField("Player "+new Random().nextInt(9999), 10);
-
+	JButton manualButton = new JButton("Connect Manually");
+	
 	public static void main(String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(false);
 		new Launcher();
@@ -56,7 +59,6 @@ public class Launcher extends JFrame {
 			final ProcessBuilder builder = new ProcessBuilder(command);
 			builder.start();
 		} catch (Exception e) {e.printStackTrace();} finally {System.exit(0);}
-
 	}
 
 	/**
@@ -70,6 +72,8 @@ public class Launcher extends JFrame {
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		add(Box.createRigidArea(new Dimension(0, 10)));
 		add(scanBtn);
+		add(Box.createRigidArea(new Dimension(0, 5)));
+		add(manualButton);
 		add(Box.createRigidArea(new Dimension(0, 5)));
 		add(serverBtn);
 		add(Box.createRigidArea(new Dimension(0, 5)));
@@ -85,11 +89,12 @@ public class Launcher extends JFrame {
 		scanBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		serverBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		roomTextDisplay.setAlignmentX(Component.CENTER_ALIGNMENT);
-
+		manualButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+		
 		Listener listener = new Listener();
 		scanBtn.addActionListener(listener);
 		serverBtn.addActionListener(listener);
-
+		manualButton.addActionListener(listener);
 		setVisible(true);
 	}
 
@@ -185,6 +190,10 @@ public class Launcher extends JFrame {
 			}
 			if(e.getSource()==serverBtn) {
 				launch("localhost");
+			}
+			if(e.getSource()==manualButton) {
+				String ip = JOptionPane.showInputDialog("Enter the ip of the computer to connect to", "");
+				launch(ip);
 			}
 		}
 	}
